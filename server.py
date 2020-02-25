@@ -1,4 +1,4 @@
-import socket module
+import socket
 from socket import *
 serverSocket = socket(AF_INET, SOCK_STREAM)
 #Prepare a server socket
