@@ -1,12 +1,23 @@
+"""
+    Pranav Bhandari
+    1001551132
+"""
+
+
 import socket
+import sys
 from socket import *
 import thread
 
 def send_data( connectionSocket, addr):
     try:
+        #Receiving the request
         message = connectionSocket.recv(1024)
-        #print(message)
+        print "\tConnection received from {}".format(addr)
+        print "\tMessage received: {}".format(message.split('\n')[0])
         filename = message.split()[1]
+        if filename == "/":
+            filename = "/default.html" 
         f = open(filename[1:])
         outputdata = f.read()
         # Sending one HTTP Header line into socket
@@ -17,7 +28,7 @@ def send_data( connectionSocket, addr):
         connectionSocket.close()
     except:
         # Sending response for file not found
-        print 'No such file.'
+        print "\tNo such file."
         connectionSocket.send('HTTP/1.1 404 File not found\r\n\r\n')
         connectionSocket.close()
 
@@ -25,7 +36,7 @@ def send_data( connectionSocket, addr):
 
 serverSocket = socket(AF_INET, SOCK_STREAM)
 #Prepare a server socket
-port = 8080
+port = int(sys.argv[1]) if len(sys.argv)==2 else 8080
 # Next bind to the port 
 # we have not typed any ip in the ip field 
 # instead we have inputted an empty string 
@@ -36,11 +47,12 @@ serverSocket.bind(('', port))
 serverSocket.listen(5)
 while True:
     #Establish Connection
-    print 'Ready to serve...'
+    print "Ready to serve..."
     connectionSocket, addr = serverSocket.accept()
-    print "Connection received from {}".format(addr)
     try:
+        #Starting the thread and passing the arguments to the thread.
         thread.start_new_thread(send_data, (connectionSocket, addr))
     except:
         print "Unable to start thread for address {}".format(addr)
+#Closing the socket
 serverSocket.close()
