@@ -14,4 +14,4 @@ The followinf command should be run in the terminal to run the client
 The port number and the filename is optional. If not provided with these values, 8080 and index.html will be used by default.
   
 # Note
-The port number should be the same for the clients and the server to send and recieve messages between different clients.
+The port number should be the same for the clients and the server.
